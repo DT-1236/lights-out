@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the lit snapshot 1`] = `
+<table>
+  <tbody>
+    <tr>
+      <Cell
+        isLit={true}
+      >
+        <td
+          className="Cell Cell-lit"
+          onClick={[Function]}
+        />
+      </Cell>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`matches the off snapshot 1`] = `
+<table>
+  <tbody>
+    <tr>
+      <Cell
+        isLit={false}
+      >
+        <td
+          className="Cell"
+          onClick={[Function]}
+        />
+      </Cell>
+    </tr>
+  </tbody>
+</table>
+`;
