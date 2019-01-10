@@ -22,13 +22,16 @@ class Cell extends Component {
 
   handleClick() {
     // call up to the board to flip cells around this cell
-    this.props.flipCellsAroundMe(this.props.id);
+    const nums = this.props.id.split('-');
+    this.props.click([+nums[0], +nums[1]]);
   }
 
   render() {
     let classes = 'Cell' + (this.props.isLit ? ' Cell-lit' : '');
 
-    return <td className={classes} onClick={this.handleClick} />;
+    return (
+      <td id={this.props.id} className={classes} onClick={this.handleClick} />
+    );
   }
 }
 

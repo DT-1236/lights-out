@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Initial board randomization behaves as expected 2x1 board does not auto-win 1`] = `
+<Board
+  ncols={1}
+  nrows={2}
+>
+  <table>
+    <tbody>
+      <tr
+        key="0"
+      >
+        <Cell
+          click={[Function]}
+          id="0-0"
+          isLit={false}
+          key="0-0"
+        >
+          <td
+            className="Cell"
+            id="0-0"
+            onClick={[Function]}
+          />
+        </Cell>
+      </tr>
+      <tr
+        key="1"
+      >
+        <Cell
+          click={[Function]}
+          id="1-0"
+          isLit={false}
+          key="1-0"
+        >
+          <td
+            className="Cell"
+            id="1-0"
+            onClick={[Function]}
+          />
+        </Cell>
+      </tr>
+    </tbody>
+  </table>
+</Board>
+`;
+
+exports[`Initial board randomization behaves as expected auto-wins for a 1x1 board 1`] = `
+<Board
+  ncols={1}
+  nrows={1}
+>
+  <p>
+    You won! How nice
+  </p>
+</Board>
+`;

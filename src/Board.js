@@ -36,13 +36,7 @@ class Board extends Component {
 
   constructor(props) {
     super(props);
-    // this.state = {};
-    // for (let y = 0; y < this.props.height; y++) {
-    //   for (let x = 0; x < this.props.width; x++) {
-    //     this.state[`${x}_${y}`] = Math.floor(Math.random() * 2)
-    //   }
-    // }
-    this.flipCellsAround = this.flipCellsAround.bind(this);
+    this.click = this.click.bind(this);
     this.state = { board: this.createBoard() };
   }
 
@@ -60,9 +54,9 @@ class Board extends Component {
   }
 
   /** handle changing a cell: update board & determine if winner */
-  flipCell(y, x, board) {
+  static flipCell(y, x, board) {
     // if this coord is actually on board, flip it
-    if (x >= 0 && x < board.length && y >= 0 && y < board[0].length) {
+    if (x >= 0 && x < board[0].length && y >= 0 && y < board.length) {
       board[y][x] = !board[y][x];
     }
   }
@@ -72,38 +66,38 @@ class Board extends Component {
     const maxY = board.length;
     const clicks = maxX * maxY;
     for (let i = 0; i < clicks; i++) {
-      // this.flipCellsAround(
-      //   `${Math.floor(Math.random() * maxY)}-${Math.floor(
-      //     Math.random() * maxX
-      //   )}`,
-      //   board
-      // );
+      Board.flipCellsAround(board, [
+        Math.floor(Math.random() * maxY),
+        Math.floor(Math.random() * maxX)
+      ]);
     }
     return board;
   }
 
-  flipCellsAround(coord) {
-    // coords is in the form of 'y-x'
-    const board = this.state.board;
-    let [y, x] = coord.split('-').map(Number);
-    [y, x] = [+y, +x];
+  static flipCellsAround(board, coord) {
+    const y = coord[0];
+    const x = coord[1];
 
     let flipToDo = [[y, x], [y - 1, x], [y + 1, x], [y, x - 1], [y, x + 1]];
     flipToDo.forEach(coords => {
-      this.flipCell(coords[0], coords[1], board);
+      Board.flipCell(coords[0], coords[1], board);
     });
 
     // TODO: flip this cell and the cells around it
+    return board;
+  }
 
-    const hasWon = this.checkWin();
+  click(coord) {
+    const board = Board.flipCellsAround(this.state.board, coord);
+    const hasWon = Board.checkWin(this.state.board);
     // win when every cell is turned off
     // TODO: determine is the game has been won
 
     this.setState({ board, hasWon });
   }
 
-  checkWin() {
-    return this.state.board.every(row => row.every(bool => bool));
+  static checkWin(board) {
+    return board.every(row => row.every(bool => bool));
   }
 
   renderBoard() {
@@ -114,7 +108,7 @@ class Board extends Component {
             key={`${y}-${x}`}
             id={`${y}-${x}`}
             isLit={cell}
-            flipCellsAroundMe={this.flipCellsAround}
+            click={this.click}
           />
         ))}
       </tr>
@@ -128,7 +122,11 @@ class Board extends Component {
   /** Render game board or winning message. */
 
   render() {
-    return this.checkWin() ? <p>"You won! How nice"</p> : this.renderBoard();
+    return Board.checkWin(this.state.board) ? (
+      <p>You won! How nice</p>
+    ) : (
+      this.renderBoard()
+    );
 
     // if the game is won, just show a winning msg & render nothing else
 
