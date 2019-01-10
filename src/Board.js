@@ -28,6 +28,8 @@ import './Board.css';
  *
  **/
 
+const victoryMessage = <p>You won! How nice</p>;
+
 class Board extends Component {
   static defaultProps = {
     nrows: 5,
@@ -41,6 +43,7 @@ class Board extends Component {
   }
 
   createBoard() {
+    // Make a board. Make it random
     let board = [];
     for (let y = 0; y < this.props.nrows; y++) {
       board.push([]);
@@ -49,19 +52,12 @@ class Board extends Component {
       }
     }
 
-    // TODO: create array-of-arrays of true/false values
     return Board.randomizeBoard(board);
   }
 
-  /** handle changing a cell: update board & determine if winner */
-  static flipCell(y, x, board) {
-    // if this coord is actually on board, flip it
-    if (x >= 0 && x < board[0].length && y >= 0 && y < board.length) {
-      board[y][x] = !board[y][x];
-    }
-  }
-
   static randomizeBoard(board) {
+    // To guarantee a solvable board, click randomly for awhile
+    // Number of random clicks equals the number of squares on the board
     const maxX = board[0].length;
     const maxY = board.length;
     const clicks = maxX * maxY;
@@ -75,6 +71,7 @@ class Board extends Component {
   }
 
   static flipCellsAround(board, coord) {
+    // Flip cell and all adjacent cells
     const y = coord[0];
     const x = coord[1];
 
@@ -83,24 +80,32 @@ class Board extends Component {
       Board.flipCell(coords[0], coords[1], board);
     });
 
-    // TODO: flip this cell and the cells around it
     return board;
   }
 
+  static flipCell(y, x, board) {
+    // if this coord is actually on board, flip it
+    if (x >= 0 && x < board[0].length && y >= 0 && y < board.length) {
+      board[y][x] = !board[y][x];
+    }
+  }
+
   click(coord) {
+    // coord is an array of length two, [y x]
+    // Toggle appropriate cells and check for a win
     const board = Board.flipCellsAround(this.state.board, coord);
     const hasWon = Board.checkWin(this.state.board);
-    // win when every cell is turned off
-    // TODO: determine is the game has been won
 
     this.setState({ board, hasWon });
   }
 
   static checkWin(board) {
+    // See if every cell in the logical board is true
     return board.every(row => row.every(bool => bool));
   }
 
   renderBoard() {
+    // Create an array of tr's which contain Cells. The Cells render as td
     const board = this.state.board.map((row, y) => (
       <tr key={y}>
         {row.map((cell, x) => (
@@ -113,28 +118,18 @@ class Board extends Component {
         ))}
       </tr>
     ));
+    // The board, being made of tr's, must be under a tbody under a table
     return (
       <table>
         <tbody>{board}</tbody>
       </table>
     );
   }
-  /** Render game board or winning message. */
 
   render() {
-    return Board.checkWin(this.state.board) ? (
-      <p>You won! How nice</p>
-    ) : (
-      this.renderBoard()
-    );
-
-    // if the game is won, just show a winning msg & render nothing else
-
-    // TODO
-
-    // make table board
-
-    // TODO
+    return Board.checkWin(this.state.board)
+      ? victoryMessage
+      : this.renderBoard();
   }
 }
 
